@@ -9,7 +9,6 @@ const NewsApiService = new NewsApiService();
 searchForm.addEventListener('submit', onSearch);
 buttonGallery.addEventListener('click', onLoadMore);
 
-
 // let page = 1;
 // function onLoadMore(event) {
 //   if (event) {
@@ -19,12 +18,12 @@ buttonGallery.addEventListener('click', onLoadMore);
 //   }
 // }
 
-
-
 function onSearch(event) {
   event.preventDefault();
 
-  NewsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
+  NewsApiService.searchQuery =
+    event.currentTarget.elements.searchQuery.value.trim();
+  NewsApiService.resetPage();
   NewsApiService.fetchGallery();
   // fetchGallery(formSearchQuery, page).then(response.length === 0);
 
@@ -42,8 +41,6 @@ function onLoadMore(event) {
 //   countryInfo.innerHTML = '';
 //   countryList.innerHTML = '';
 // }
-
-
 
 // function renderGalleryMarkup(elements) {
 //   return elements
