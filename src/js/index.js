@@ -17,10 +17,10 @@ function onSearch(event) {
   NewsApiService.query =
     event.currentTarget.elements.searchQuery.value.trim();
   
-  // if (!NewsApiService.searchQuery) {
-  //   CleareGalleryContainer();
-  //   return;
-  // }
+  if (!NewsApiService.searchQuery) {
+    CleareGalleryContainer();
+    return;
+  }
   
   if (NewsApiService.searchQuery === '') {
     return alert('введите то - то нормальное');
