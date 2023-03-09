@@ -1,67 +1,77 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import axios from "axios";
 import NewsApiService from './news-service';
 
 const searchForm = document.querySelector('#search-form');
-const galleryElement = document.querySelector('.gallery');
-const buttonGallery = document.querySelector('.gallery__button');
+const galleryContainer = document.querySelector('.gallery');
+const buttonLoadMore = document.querySelector('.load-more');
+
 const NewsApiService = new NewsApiService();
 
 searchForm.addEventListener('submit', onSearch);
-buttonGallery.addEventListener('click', onLoadMore);
-
-// let page = 1;
-// function onLoadMore(event) {
-//   if (event) {
-//     page += 1;
-//   } else {
-//     page === 1;
-//   }
-// }
+buttonLoadMore.addEventListener('click', onLoadMore);
 
 function onSearch(event) {
   event.preventDefault();
 
-  NewsApiService.searchQuery =
+  NewsApiService.query =
     event.currentTarget.elements.searchQuery.value.trim();
-  NewsApiService.resetPage();
-  NewsApiService.fetchGallery();
-  // fetchGallery(formSearchQuery, page).then(response.length === 0);
-
-  // if (!formSearchQuery) {
-  //   clearTemplate();
+  
+  // if (!NewsApiService.searchQuery) {
+  //   CleareGalleryContainer();
   //   return;
   // }
+  
+  if (NewsApiService.searchQuery === '') {
+    return alert('введите то - то нормальное');
+  }
+  
+  NewsApiService.resetPage();
+  NewsApiService.fetchGallery().then(images => {
+    CleareGalleryContainer();
+    renderGalleryMarkup(images);
+  });
+  }
+
+function onLoadMore() {
+  NewsApiService.fetchGallery().then(renderGalleryMarkup(images));
 }
 
-function onLoadMore(event) {
-  NewsApiService.fetchGallery();
+function CleareGalleryContainer() {
+  galleryContainer.innerHTML = '';
 }
 
-// function clearTemplate() {
-//   countryInfo.innerHTML = '';
-//   countryList.innerHTML = '';
-// }
+function renderGalleryMarkup(images) {
+  const markup = images
+    .map(({ webformatURL, largeImageURL, tags, likes, views, comments }) => {
+      return `<div class="photo-card">
+      <a href="${webformatURL}">
+        <img src="${largeImageURL}" alt="${tags}" loading="lazy"/>
+      </a>
+      <div class="info">
+        <p class="info-item">
+          <b>Likes</b>
+          <span>${likes}</span>
+        </p>
+        <p class="info-item">
+          <b>Views</b>
+          <span>${views}</span>
+        </p>
+        <p class="info-item">
+          <b>Comments</b>
+          <span>${comments}</span>
+        </p>
+        <p class="info-item">
+          <b>Downloads</b>
+          <span>${downloads}</span>
+        </p>
+      </div>
+    </div>`;
+    })
+    .join('');
+  
+    galleryContainer.insertAdjacentHTML('beforeend', markup);
+}
 
-// function renderGalleryMarkup(elements) {
-//   return elements
-//     .map(({}) => {
-//       return `<div class="photo-card">
-//       <img src="${photo}" alt="" loading="lazy" />
-//       <div class="info">
-//         <p class="info-item">
-//           <b>Likes</b>
-//         </p>
-//         <p class="info-item">
-//           <b>Views</b>
-//         </p>
-//         <p class="info-item">
-//           <b>Comments</b>
-//         </p>
-//         <p class="info-item">
-//           <b>Downloads</b>
-//         </p>
-//       </div>
-//     </div>`;
-//     })
-//     .join('');
-// }
+
+
