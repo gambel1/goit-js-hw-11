@@ -28,6 +28,21 @@ async function onSearch(event) {
     );
   }
 
+  fetchBoxGallery(NewsApiService.query)
+    .then(data => {
+      if (data.length > 10) {
+        Notify.warning(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      }
+      renderTemplate(data);
+    })
+    .catch(error => {
+      Notify.warning(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    });
+
   LoadMoreBtn.show();
   NewsApiService.resetPage();
   CleareGalleryContainer();
@@ -40,6 +55,11 @@ async function fetchBoxGallery() {
     renderGalleryMarkup(images);
     LoadMoreBtn.enable();
   });
+}
+
+function renderTemplate(elements) {
+  let template = '';
+  let templateHandle = '';
 }
 
 function CleareGalleryContainer() {
