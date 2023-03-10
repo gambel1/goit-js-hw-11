@@ -1,40 +1,45 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import axios from "axios";
+import axios from 'axios';
 import NewsApiService from './news-service';
+import LoadMoreBtn from './load-more-btn';
 
 const searchForm = document.querySelector('#search-form');
 const galleryContainer = document.querySelector('.gallery');
-const buttonLoadMore = document.querySelector('.load-more');
+// const buttonLoadMore = document.querySelector('.load-more');
 
+const LoadMoreBtn = new LoadMoreBtn({
+  selector: '.load-more',
+  hidden: true,
+});
 const NewsApiService = new NewsApiService();
 
 searchForm.addEventListener('submit', onSearch);
-buttonLoadMore.addEventListener('click', onLoadMore);
+LoadMoreBtn.refs.button.addEventListener('click', fetchBoxGallery);
 
 function onSearch(event) {
   event.preventDefault();
 
-  NewsApiService.query =
-    event.currentTarget.elements.searchQuery.value.trim();
-  
-  if (!NewsApiService.searchQuery) {
-    CleareGalleryContainer();
-    return;
-  }
-  
+  NewsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
+
   if (NewsApiService.searchQuery === '') {
-    return alert('введите то - то нормальное');
-  }
-  
-  NewsApiService.resetPage();
-  NewsApiService.fetchGallery().then(images => {
     CleareGalleryContainer();
-    renderGalleryMarkup(images);
-  });
+    return Notify.warning(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
 
-function onLoadMore() {
-  NewsApiService.fetchGallery().then(renderGalleryMarkup(images));
+  LoadMoreBtn.show();
+  NewsApiService.resetPage();
+  CleareGalleryContainer();
+  fetchBoxGallery();
+}
+
+function fetchBoxGallery() {
+  LoadMoreBtn.disable();
+  NewsApiService.fetchGallery().then(images => {
+    renderGalleryMarkup(images);
+    LoadMoreBtn.enable();
+  });
 }
 
 function CleareGalleryContainer() {
@@ -69,9 +74,6 @@ function renderGalleryMarkup(images) {
     </div>`;
     })
     .join('');
-  
-    galleryContainer.insertAdjacentHTML('beforeend', markup);
+
+  galleryContainer.insertAdjacentHTML('beforeend', markup);
 }
-
-
-
