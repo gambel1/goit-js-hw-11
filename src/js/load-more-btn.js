@@ -12,7 +12,6 @@ export default class LoadMoreBtn {
     const refs = {};
     refs.button = document.querySelector(selector);
     refs.label = refs.button.querySelector('.label');
-    return
 
     return refs;
   }
