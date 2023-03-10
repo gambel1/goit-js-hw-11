@@ -19,9 +19,10 @@ loadMoreBtn.refs.button.addEventListener('click', fetchBoxGallery);
 async function onSearch(event) {
   event.preventDefault();
 
-  newsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
+  newsApiService.searchQuery =
+    event.currentTarget.elements.searchQuery.value.trim();
 
-  if (newsApiService.query === '') {
+  if (newsApiService.searchQuery === '') {
     CleareGalleryContainer();
     return Notify.warning(
       'Sorry, there are no images matching your search query. Please try again.'
