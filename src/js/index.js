@@ -16,7 +16,7 @@ const NewsApiService = new NewsApiService();
 searchForm.addEventListener('submit', onSearch);
 LoadMoreBtn.refs.button.addEventListener('click', fetchBoxGallery);
 
-function onSearch(event) {
+async function onSearch(event) {
   event.preventDefault();
 
   NewsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
@@ -34,7 +34,7 @@ function onSearch(event) {
   fetchBoxGallery();
 }
 
-function fetchBoxGallery() {
+async function fetchBoxGallery() {
   LoadMoreBtn.disable();
   NewsApiService.fetchGallery().then(images => {
     renderGalleryMarkup(images);
@@ -46,8 +46,8 @@ function CleareGalleryContainer() {
   galleryContainer.innerHTML = '';
 }
 
-function renderGalleryMarkup(images) {
-  const markup = images
+async function renderGalleryMarkup(images) {
+  const markup = await images
     .map(({ webformatURL, largeImageURL, tags, likes, views, comments }) => {
       return `<div class="photo-card">
       <a href="${webformatURL}">
