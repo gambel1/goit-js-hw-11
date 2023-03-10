@@ -7,21 +7,21 @@ const searchForm = document.querySelector('#search-form');
 const galleryContainer = document.querySelector('.gallery');
 // const buttonLoadMore = document.querySelector('.load-more');
 
-const LoadMoreBtn = new LoadMoreBtn({
+const loadMoreBtn = new LoadMoreBtn({
   selector: '.load-more',
   hidden: true,
 });
-const NewsApiService = new NewsApiService();
+const newsApiService = new NewsApiService();
 
 searchForm.addEventListener('submit', onSearch);
-LoadMoreBtn.refs.button.addEventListener('click', fetchBoxGallery);
+loadMoreBtn.refs.button.addEventListener('click', fetchBoxGallery);
 
 async function onSearch(event) {
   event.preventDefault();
 
-  NewsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
+  newsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
 
-  if (NewsApiService.query === '') {
+  if (newsApiService.query === '') {
     CleareGalleryContainer();
     return Notify.warning(
       'Sorry, there are no images matching your search query. Please try again.'
@@ -32,17 +32,17 @@ async function onSearch(event) {
     );
   }
 
-  LoadMoreBtn.show();
-  NewsApiService.resetPage();
+  loadMoreBtn.show();
+  newsApiService.resetPage();
   CleareGalleryContainer();
   fetchBoxGallery();
 }
 
 async function fetchBoxGallery() {
-  LoadMoreBtn.disable();
-  NewsApiService.fetchGallery().then(images => {
+  loadMoreBtn.disable();
+  newsApiService.fetchGallery().then(images => {
     renderGalleryMarkup(images);
-    LoadMoreBtn.enable();
+    loadMoreBtn.enable();
   });
 }
 
