@@ -11,7 +11,8 @@ export default class NewsApiService {
   async fetchGallery() {
     try {
       const response =
-        await axios.get(`${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal
+        await axios.get(`${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&
+        orientation=horizontal
         &safesearch=true&per_page=40&page=${this.page}`);
       this.incrementPage();
       return response.data;

@@ -21,7 +21,7 @@ async function onSearch(event) {
 
   NewsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
 
-  if (NewsApiService.searchQuery === '') {
+  if (NewsApiService.query === '') {
     CleareGalleryContainer();
     return Notify.warning(
       'Sorry, there are no images matching your search query. Please try again.'
