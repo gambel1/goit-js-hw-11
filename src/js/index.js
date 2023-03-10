@@ -26,11 +26,7 @@ async function onSearch(event) {
     return Notify.warning(
       'Sorry, there are no images matching your search query. Please try again.'
     );
-  } else if (data.length > 10) {
-    Notify.warning(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  }
+  } 
 
   loadMoreBtn.show();
   newsApiService.resetPage();
