@@ -43,7 +43,7 @@ async function onSearch(event) {
   }
 
   try {
-    if (totalHits > 0) {
+    if (response.totalHits > 0) {
       Notify.success(`Hooray! We found ${response.totalHits} images.`);
       galleryContainer.innerHTML = '';
       renderGalleryMarkup(response.hits);
@@ -136,3 +136,10 @@ function renderGalleryMarkup(images) {
 
   galleryContainer.insertAdjacentHTML('beforeend', markup);
 }
+
+
+
+
+
+
+
