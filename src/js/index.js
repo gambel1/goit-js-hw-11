@@ -1,80 +1,92 @@
+import fetchGallery from './news-service';
+import cardArticles from './templates/card-articles.hbs';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import axios from 'axios';
-import NewsApiService from './news-service';
-import LoadMoreBtn from './load-more-btn';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('#search-form');
 const galleryContainer = document.querySelector('.gallery');
-// const buttonLoadMore = document.querySelector('.load-more');
+const loadMoreBtn = document.querySelector('.load-more');
+const endCollectionText = document.querySelector('.end-collection-text');
 
-const loadMoreBtn = new LoadMoreBtn({
-  selector: '.load-more',
-  hidden: true,
+loadMoreBtn.addEventListener('click', onClickLoadMoreBtn);
+
+let lightbox = new SimpleLightbox('.photo-card a', {
+  captions: true,
+  captionsData: 'alt',
+  captionDelay: 250,
 });
-const newsApiService = new NewsApiService();
+
+let currentPage = 1;
+let currentHits = 0;
+let searchQuery = '';
 
 searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.refs.button.addEventListener('click', fetchBoxGallery);
 
 async function onSearch(event) {
   event.preventDefault();
 
-  newsApiService.searchQuery =
-    event.currentTarget.elements.searchQuery.value.trim();
+  searchQuery = event.currentTarget.searchQuery.value;
+  currentPage = 1;
 
-  if (newsApiService.searchQuery === '') {
-    CleareGalleryContainer();
-    return Notify.warning(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  } 
+  if (searchQuery === '') {
+    return;
+  }
 
-  loadMoreBtn.show();
-  newsApiService.resetPage();
-  CleareGalleryContainer();
-  fetchBoxGallery();
+  const response = await fetchGallery(searchQuery, currentPage);
+  currentPage = response.hits.length;
+
+  if (response.totalHits > 40) {
+    loadMoreBtn.classList.remove('.is-hidden');
+  } else {
+    loadMoreBtn.classList.add('.is-hidden');
+  }
+
+  try {
+    if (totalHits > 0) {
+      Notify.success(`Hooray! We found ${response.totalHits} images.`);
+      galleryContainer.innerHTML = '';
+      renderGalleryMarkup(response.hits);
+      lightbox.refresh();
+      endCollectionText.classList.add('.is-hidden');
+
+      const { height: cardHeight } = document
+        .querySelector('.gallery')
+        .firstElementChild.getBoundingClientRect();
+
+      window.scrollBy({
+        top: cardHeight * -100,
+        behavior: 'smooth',
+      });
+    }
+
+    if (response.totalHits === 0) {
+      galleryContainer.innerHTML = '';
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      loadMoreBtn.classList.add('.is-hidden');
+      endCollectionText.classList.add('.is-hidden');
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-async function fetchBoxGallery() {
-  loadMoreBtn.disable();
-  newsApiService.fetchGallery().then(images => {
-    renderGalleryMarkup(images);
-    loadMoreBtn.enable();
-  });
+async function onClickLoadMoreBtn() {
+  currentPage += 1;
+  response;
+  renderGalleryMarkup(response.hits);
+  lightbox.refresh();
+  currentHits += response.hits.length;
+
+  if (currentHits === response.totalHits) {
+    loadMoreBtn.classList.add('.is-hidden');
+    endCollectionText.classList.remove('.is-hidden');
+  }
 }
 
-function CleareGalleryContainer() {
-  galleryContainer.innerHTML = '';
-}
-
-async function renderGalleryMarkup(images) {
-  const markup = await images
-    .map(({ webformatURL, largeImageURL, tags, likes, views, comments }) => {
-      return `<div class="photo-card">
-      <a href="${webformatURL}">
-        <img src="${largeImageURL}" alt="${tags}" loading="lazy"/>
-      </a>
-      <div class="info">
-        <p class="info-item">
-          <b>Likes</b>
-          <span>${likes}</span>
-        </p>
-        <p class="info-item">
-          <b>Views</b>
-          <span>${views}</span>
-        </p>
-        <p class="info-item">
-          <b>Comments</b>
-          <span>${comments}</span>
-        </p>
-        <p class="info-item">
-          <b>Downloads</b>
-          <span>${downloads}</span>
-        </p>
-      </div>
-    </div>`;
-    })
-    .join('');
-
+function renderGalleryMarkup(images) {
+  const markup = images.map(item => cardArticles(item)).join('');
   galleryContainer.insertAdjacentHTML('beforeend', markup);
 }
