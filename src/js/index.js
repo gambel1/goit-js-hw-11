@@ -100,10 +100,10 @@ function renderGalleryMarkup(images) {
       }) => {
         return `
     <div class="photo-card">
-      <a href="${webformatURL}">
+      <a href="${largeImageURL}">
         <img
           class="photo-card__img"
-          src="${largeImageURL}" 
+          src="${webformatURL}" 
           alt="${tags}" 
           loading="lazy" 
           width="320"
@@ -111,19 +111,19 @@ function renderGalleryMarkup(images) {
         />
       </a>
       <div class="info">
-        <p class="info-item">
+        <p class="info__item">
           <b>Likes</b>
           <span>${likes}</span>
         </p>
-        <p class="info-item">
+        <p class="info__item">
           <b>Views</b>
           <span>${views}</span>
         </p>
-        <p class="info-item">
+        <p class="info__item">
           <b>Comments</b>
           <span>${comments}</span>
         </p>
-        <p class="info-item">
+        <p class="info__item">
           <b>Downloads</b>
           <span>${downloads}</span>
         </p>
