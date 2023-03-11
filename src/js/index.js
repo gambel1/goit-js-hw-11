@@ -1,5 +1,4 @@
 import fetchGallery from './news-service';
-// import cardArticles from './templates/card-articles.hbs';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
