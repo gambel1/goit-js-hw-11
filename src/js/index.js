@@ -33,7 +33,7 @@ async function onSearch(event) {
   }
 
   const response = await fetchGallery(searchQuery, currentPage);
-  currentPage = response.hits.length;
+  // currentPage = response.hits.length;
 
   if (response.totalHits > 40) {
     loadMoreBtn.classList.remove('.is-hidden');
