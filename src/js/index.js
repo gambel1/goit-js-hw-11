@@ -135,10 +135,3 @@ function renderGalleryMarkup(images) {
 
   galleryContainer.insertAdjacentHTML('beforeend', markup);
 }
-
-
-
-
-
-
-
