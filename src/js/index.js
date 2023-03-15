@@ -32,16 +32,16 @@ async function onSearch(event) {
     return;
   }
 
-  const response = await fetchGallery(searchQuery, currentPage);
-  // currentPage = response.hits.length;
-
-  if (response.totalHits > 40) {
-    loadMoreBtn.classList.remove('.is-hidden');
-  } else {
-    loadMoreBtn.classList.add('.is-hidden');
-  }
-
+  
   try {
+    const response = await fetchGallery(searchQuery, currentPage);
+    // currentPage = response.hits.length;
+  
+    if (response.totalHits > 40) {
+      loadMoreBtn.classList.remove('.is-hidden');
+    } else {
+      loadMoreBtn.classList.add('.is-hidden');
+    }
     if (response.totalHits > 0) {
       Notify.success(`Hooray! We found ${response.totalHits} images.`);
       galleryContainer.innerHTML = '';
