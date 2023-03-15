@@ -32,11 +32,9 @@ async function onSearch(event) {
     return;
   }
 
-  
   try {
     const response = await fetchGallery(searchQuery, currentPage);
-    // currentPage = response.hits.length;
-  
+
     if (response.totalHits > 40) {
       loadMoreBtn.classList.remove('.is-hidden');
     } else {
@@ -74,14 +72,18 @@ async function onSearch(event) {
 
 async function onClickLoadMoreBtn() {
   currentPage += 1;
-  const response = await fetchGallery(searchQuery, currentPage);
-  renderGalleryMarkup(response.hits);
-  lightbox.refresh();
-  currentHits += response.hits.length;
+  try {
+    const response = await fetchGallery(searchQuery, currentPage);
+    renderGalleryMarkup(response.hits);
+    lightbox.refresh();
+    currentHits += response.hits.length;
 
-  if (currentHits === response.totalHits) {
-    loadMoreBtn.classList.add('.is-hidden');
-    endCollectionText.classList.remove('.is-hidden');
+    if (currentHits === response.totalHits) {
+      loadMoreBtn.classList.add('.is-hidden');
+      endCollectionText.classList.remove('.is-hidden');
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
